@@ -177,7 +177,6 @@ $box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   min-height: 100vh;
 }
 
-// Style du conteneur principal de login
 /* Style du conteneur principal de login */
 .login-container {
   background-color: #fff;
@@ -185,13 +184,12 @@ $box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   padding: 20px; /* Espacement interne */
   max-width: 400px; /* Largeur maximale */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre douce */
-  text-align: center; /* Centrer horizontalement le contenu */
+  text-align: center;
   display: flex;
-  flex-direction: column; /* Alignement en colonne */
+  flex-direction: column;
+  margin: 50px auto; /* Centrer le conteneur */
   justify-content: center; /* Centrer verticalement */
   align-items: center; /* Centrer horizontalement */
-  margin: 50px auto; /* Centrer le conteneur sur la page */
-  height: 100vh; /* Hauteur pleine page pour un centrage parfait */
 }
 
 /* Titre de l'interface */
@@ -203,7 +201,7 @@ h2 {
 
 /* Styles pour les champs de saisie */
 input {
-  width: 100%; /* Largeur complète */
+  width: 100%;
   padding: 12px;
   margin: 10px 0;
   border-radius: 6px; /* Bordures arrondies */
@@ -211,7 +209,6 @@ input {
   font-size: 1rem;
   box-sizing: border-box;
   transition: all 0.3s ease;
-  text-align: center; /* Centrer le texte dans le champ */
 }
 
 input:focus {
@@ -219,10 +216,11 @@ input:focus {
   border: 2px solid #3498db; /* Bordure bleue au focus */
 }
 
-/* Style pour la case "Se souvenir de moi" */
-.remember-me {
-  display: block; /* Mettre l'élément sur une nouvelle ligne */
-  text-align: center; /* Centrer le texte et les éléments à l'intérieur */
+/* Style pour le label "Se souvenir de moi" */
+div {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centrer horizontalement le label et la case à cocher */
   margin-bottom: 20px;
 }
 
@@ -256,7 +254,7 @@ button:active {
 
 /* Style pour l'élément checkbox */
 input[type="checkbox"] {
-  width: auto; /* Ne pas étirer la case à cocher */
+  width: auto;
   margin-right: 8px;
 }
 
