@@ -179,7 +179,7 @@ $box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 
 // Style du conteneur principal de login
 .login-container {
-  background-color: $white;
+  background-color: #fff; /* CSS pur */
   border-radius: $border-radius;
   padding: $padding;
   max-width: $max-width;
@@ -286,6 +286,7 @@ footer {
 
 <div class="container" style="display: none;" id="mainContainer">
     <h2>Création de Facture</h2>
+  <button onclick="deconnexion()">🔒 Déconnexion</button>
     <form id="factureForm">
       <label for="type">Type</label>
       <select name="type" id="type" required>
@@ -359,7 +360,18 @@ footer {
         toast.classList.remove('show');
       }, 3000); // La notification disparaît après 3 secondes
     }
-    
+
+    function protegerAcces() {
+  const estConnecte = sessionStorage.getItem('connecte');
+  if (!estConnecte) {
+    document.getElementById('mainContainer').style.display = 'none';
+    document.getElementById('loginContainer').style.display = 'flex';
+  } else {
+    document.getElementById('loginContainer').style.display = 'none';
+    document.getElementById('mainContainer').style.display = 'block';
+  }
+}
+
   let logoImageBase64 = null;
   
 // Vérifier si l'utilisateur a coché "Remember me" et s'il a des informations sauvegardées
@@ -378,6 +390,9 @@ function verifierLogin() {
     document.getElementById('loginContainer').style.display = 'none';
     document.getElementById('mainContainer').style.display = 'block';
     afficherToast("Connexion réussie !");
+
+sessionStorage.setItem('connecte', 'true');
+protegerAcces();
 
     // Si "Remember me" est coché, on stocke les informations dans localStorage
     if (rememberMe) {
@@ -402,6 +417,7 @@ window.onload = function() {
     document.getElementById('password').value = savedPassword;
     document.getElementById('rememberMe').checked = true;
   }
+    protegerAcces(); // <--- ajoute ceci ici
 };
 function chargerLogo(event) {
   const file = event.target.files[0];
@@ -627,6 +643,12 @@ doc.save(`${factureData.client}_facture.pdf`);
       // Affichage du message de confirmation
       afficherToast("Information enregistrée avec succès !");
     }
+function deconnexion() {
+  sessionStorage.removeItem('connecte');
+  localStorage.removeItem('username');
+  localStorage.removeItem('password');
+  location.reload();
+}
 
     function reinitialiserFormulaire() {
       document.getElementById('factureForm').reset();
