@@ -203,7 +203,7 @@ h2 {
 
 /* Styles pour les champs de saisie */
 input {
-  width: 100%;
+  width: 100%; /* Largeur complète */
   padding: 12px;
   margin: 10px 0;
   border-radius: 6px; /* Bordures arrondies */
@@ -211,6 +211,7 @@ input {
   font-size: 1rem;
   box-sizing: border-box;
   transition: all 0.3s ease;
+  text-align: center; /* Centrer le texte dans le champ */
 }
 
 input:focus {
@@ -220,9 +221,8 @@ input:focus {
 
 /* Style pour la case "Se souvenir de moi" */
 .remember-me {
-  display: flex;
-  align-items: center;
-  justify-content: center; /* Centrer horizontalement */
+  display: block; /* Mettre l'élément sur une nouvelle ligne */
+  text-align: center; /* Centrer le texte et les éléments à l'intérieur */
   margin-bottom: 20px;
 }
 
@@ -256,10 +256,9 @@ button:active {
 
 /* Style pour l'élément checkbox */
 input[type="checkbox"] {
-  width: auto;
+  width: auto; /* Ne pas étirer la case à cocher */
   margin-right: 8px;
 }
-
 
 
 // Styles pour la section "footer"
