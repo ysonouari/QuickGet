@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+  <title>Création de Facture</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #1E40AF;
+      --secondary-color: #4B5563;
+      --background-color: #F3F4F6;
+      --accent-color: #10B981;
+      --button-color: #F3F4F6;
+      --border-radius: 10px;
+      --input-padding: 12px;
+      --button-padding: 15px;
+    }
+
+    body {
+  touch-action: none;  /* Désactive le zoom tactile */
+}
+/* Taille minimale de police pour éviter le zoom sur les champs de texte */
+    input, select, textarea {
+      font-size: 16px;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: var(--background-color);
+      color: var(--secondary-color);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .container {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      width: 100%;
+      max-width: 800px;
+      box-sizing: border-box;
+      margin: 0 15px;
+    }
+    h2 {
+      color: var(--primary-color);
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    input, select, button {
+      width: 100%;
+      padding: var(--input-padding);
+      margin: 10px 0;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border: 2px solid var(--primary-color);
+    }
+    button[type="button"], button[type="submit"] {
+      background-color: var(--button-color);
+      color: var(--secondary-color);
+      border: 1px solid #D1D5DB;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    button[type="button"]:hover, button[type="submit"]:hover {
+      background-color: var(--accent-color);
+      color: white;
+    }
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .loader {
+      display: none;
+      text-align: center;
+      font-weight: bold;
+      color: var(--accent-color);
+      margin-top: 20px;
+    }
+    #total {
+      font-weight: 600;
+      margin-top: 10px;
+      color: var(--primary-color);
+    }
+    .entreprise-info {
+      background-color: #F9FAFB;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: var(--border-radius);
+      display: none;
+      transition: all 0.3s ease;
+    }
+    .entreprise-info input {
+      margin-bottom: 10px;
+    }
+
+    /* Toast Notification Style */
+    .toast {
+      visibility: hidden;
+      min-width: 250px;
+      margin-left: -125px;
+      background-color: #4CAF50;
+      color: white;
+      text-align: center;
+      border-radius: 2px;
+      padding: 16px;
+      position: fixed;
+      z-index: 1;
+      left: 50%;
+      top: 50%;
+      font-size: 17px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      transition: visibility 0.5s, opacity 0.5s ease-in-out;
+    }
+
+    .toast.show {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+    /* Styling for copyright */
+.copyright {
+  position: fixed;    /* Fixe l'élément en bas de la page */
+  bottom: 0;          /* Place le texte en bas */
+  right: 0;           /* Aligne le texte à droite */
+  font-size: 1rem;    /* Taille du texte */
+  color: #4B5563;     /* Couleur du texte */
+  text-align: right;  /* Aligne le texte à droite à l'intérieur de l'élément */
+  padding: 10px;      /* Espacement autour du texte */
+  width: auto;        /* Ajuste la largeur en fonction du texte */
+}
+
+// Variables de couleur
+$secondary-color: #4B5563;
+$accent-color: #10B981;
+$background-color: #F3F4F6;
+$white: #fff;
+
+// Variables de mise en page
+$padding: 30px;
+$border-radius: 10px;
+$max-width: 400px;
+$box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+// Mixins pour la réutilisation
+@mixin center-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+// Style du conteneur principal de login
+.login-container {
+  background-color: $white;
+  border-radius: $border-radius;
+  padding: $padding;
+  max-width: $max-width;
+  box-shadow: $box-shadow;
+  text-align: center;
+  flex-direction: column;
+}
+
+// Titres
+h2 {
+  font-size: 2rem;
+  color: $primary-color;
+  margin-bottom: 20px;
+}
+
+// Formulaire
+form {
+  width: 100%;
+
+  label {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: $secondary-color;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  input,
+  button {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: $border-radius;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+  }
+
+  input:focus {
+    outline: none;
+    border: 2px solid $primary-color;
+  }
+
+  button {
+    background-color: $primary-color;
+    color: $white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+
+    &:hover {
+      background-color: $accent-color;
+    }
+  }
+}
+
+// Styles pour la section "footer"
+footer {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: $secondary-color;
+  font-size: 0.8rem;
+}
+
+    textarea {
+      width: 100%;
+      padding: var(--input-padding);
+      margin: 10px 0;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      box-sizing: border-box;
+      border: 1px solid #D1D5DB;
+      resize: vertical;
+      transition: border-color 0.3s ease;
+      background-color: white;
+      color: #111827;
+      font-family: 'Arial', sans-serif;
+    }
+
+    textarea:focus {
+      outline: none;
+      border: 2px solid var(--primary-color);
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Toast Notification -->
+  <div id="toastMessage" class="toast">
+    <p id="toastText"></p>
+  </div>
+
+<div class="login-container" id="loginContainer">
+  <h2>Connexion</h2>
+  <input type="text" id="username" placeholder="Nom d'utilisateur" required />
+  <input type="password" id="password" placeholder="Mot de passe" required />
+  <div>
+    <input type="checkbox" id="rememberMe" />
+    <label for="rememberMe">Se souvenir de moi</label>
+  </div>
+  <button onclick="verifierLogin()">Se connecter</button>
+</div>
+
+<div class="container" style="display: none;" id="mainContainer">
+    <h2>Création de Facture</h2>
+    <form id="factureForm">
+      <label for="type">Type</label>
+      <select name="type" id="type" required>
+        <option value="Facture">Facture</option>
+        <option value="Devis">Devis</option>
+      </select>
+      <label for="date">Date</label>
+      <input type="date" name="date" id="date" required />
+      <label for="client">Client</label>
+<textarea name="client" id="client" rows="6" required placeholder="Détails relatifs au client..."></textarea>
+
+
+      
+      <label for="devise">Devise</label>
+      <select name="devise" id="devise" required onchange="mettreAJourTotaux()">
+        <option value="€">€</option>
+          <option value="DH" selected>DH</option>  <!-- DH sélectionné par défaut -->
+      </select>
+      <label for="tva">TVA (%)</label>
+      <input type="number" name="tva" id="tva" value="20" required onchange="mettreAJourTotaux()" />
+      <label for="lignes"></label>
+      <table id="lignesTable">
+        <thead>
+          <tr><th>Désignation</th><th>Prix Unitaire</th><th>Quantité</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text" name="designation" required /></td>
+            <td><input type="number" name="prix" step="0.01" required oninput="mettreAJourTotaux()" /></td>
+            <td><input type="number" name="quantite" required oninput="mettreAJourTotaux()" /></td>
+            <td><button type="button" onclick="supprimerLigne(this)">Supprimer</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="button" onclick="ajouterLigne()">➕ Ajouter une ligne</button>
+      <div id="total"></div>
+      <div class="button-group">
+        <button type="submit" id="submitBtn">Générer Facture</button>
+        <button type="button" id="btnTelecharger" disabled>📥 Télécharger PDF</button>
+        <button type="button" onclick="reinitialiserFormulaire()">🆕 Nouvelle facture</button>
+        <label for="logoUpload">📷 Ajouter un logo</label>
+  <input type="file" id="logoUpload" accept="image/*" onchange="chargerLogo(event)" />
+      </div>
+    </form>
+    <div class="button-group">
+      <button type="button" onclick="afficherFormEntreprise()">🖋️ Informations Entreprise</button>
+    </div>
+    <div class="entreprise-info" id="entrepriseInfoForm">
+      <h3>Information</h3>
+      <label for="nomEntreprise">Nom de l'Entreprise</label>
+      <input type="text" id="nomEntreprise" />
+      <button type="button" onclick="enregistrerEntreprise()">Enregistrer</button>
+    </div>
+    <div class="loader" id="loader">Veuillez patienter, la génération de la facture est en cours...</div>
+  </div>
+
+<!-- Copyright Section -->
+  <div class="copyright">
+    <p>&copy; 2025 GetQuick. +212630230803.</p>
+  </div>
+
+  <script>
+
+     // Script pour désactiver le zoom tactile
+    document.addEventListener('touchstart', function (e) {
+      if (e.touches.length > 1) {
+        e.preventDefault();  // Empêche le zoom
+      }
+    });
+
+    document.addEventListener('touchmove', function (e) {
+      e.preventDefault();  // Empêche le zoom
+    });
+    // Fonction pour afficher la notification Toast
+    function afficherToast(message) {
+      const toast = document.getElementById('toastMessage');
+      const toastText = document.getElementById('toastText');
+      toastText.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000); // La notification disparaît après 3 secondes
+    }
+    
+  let logoImageBase64 = null;
+  
+// Vérifier si l'utilisateur a coché "Remember me" et s'il a des informations sauvegardées
+function verifierLogin() {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const rememberMe = document.getElementById('rememberMe').checked;
+
+  const identifiantsValides = {
+    'test': '123456',
+    'user1': 'test123'
+  };
+
+  // Si les identifiants sont valides
+  if (identifiantsValides[username] && identifiantsValides[username] === password) {
+    document.getElementById('loginContainer').style.display = 'none';
+    document.getElementById('mainContainer').style.display = 'block';
+    afficherToast("Connexion réussie !");
+
+    // Si "Remember me" est coché, on stocke les informations dans localStorage
+    if (rememberMe) {
+      localStorage.setItem('username', username);
+      localStorage.setItem('password', password);
+    } else {
+      // Si "Remember me" n'est pas coché, on efface les données stockées (si présentes)
+      localStorage.removeItem('username');
+      localStorage.removeItem('password');
+    }
+  } else {
+    afficherToast("Nom d'utilisateur ou mot de passe incorrect.");
+  }
+}
+
+// Lors du chargement de la page, vérifier si les données sont déjà stockées
+window.onload = function() {
+  const savedUsername = localStorage.getItem('username');
+  const savedPassword = localStorage.getItem('password');
+  if (savedUsername && savedPassword) {
+    document.getElementById('username').value = savedUsername;
+    document.getElementById('password').value = savedPassword;
+    document.getElementById('rememberMe').checked = true;
+  }
+};
+function chargerLogo(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    logoImageBase64 = e.target.result;
+    afficherToast("Logo chargé avec succès !");
+  };
+  reader.readAsDataURL(file);
+}
+
+    // Lorsque l'utilisateur enregistre les informations de l'entreprise
+    function enregistrerEntreprise() {
+      const entrepriseInfo = {
+        nom: document.getElementById('nomEntreprise').value
+      };
+      localStorage.setItem('entrepriseInfo', JSON.stringify(entrepriseInfo));
+      
+      // Affichage du message de confirmation
+      afficherToast("Information enregistrée avec succès !");
+    }
+
+    function ajouterLigne() {
+      const table = document.getElementById('lignesTable').getElementsByTagName('tbody')[0];
+      const row = table.insertRow();
+      row.innerHTML = `<td><input type="text" name="designation" required></td>
+                       <td><input type="number" name="prix" step="0.01" required oninput="mettreAJourTotaux()"></td>
+                       <td><input type="number" name="quantite" required oninput="mettreAJourTotaux()"></td>
+                       <td><button type="button" onclick="supprimerLigne(this)">Supprimer</button></td>`;
+    }
+
+    function supprimerLigne(btn) {
+      const row = btn.parentNode.parentNode;
+      row.parentNode.removeChild(row);
+      mettreAJourTotaux();
+    }
+
+    function mettreAJourTotaux() {
+      let totalHT = 0;
+      const rows = document.getElementById('lignesTable').getElementsByTagName('tbody')[0].rows;
+      for (let row of rows) {
+        const prix = parseFloat(row.cells[1].querySelector('input').value) || 0;
+        const quantite = parseInt(row.cells[2].querySelector('input').value) || 0;
+        if (prix <= 0 || quantite <= 0) continue;
+        totalHT += prix * quantite;
+      }
+      const tva = parseFloat(document.getElementById('tva').value) || 20;
+      const totalTTC = totalHT * (1 + tva / 100);
+      const devise = document.getElementById('devise').value;
+      document.getElementById('total').innerHTML = `Total HT : ${totalHT.toFixed(2)} ${devise} <br>
+                                                    TVA (${tva}%) : ${(totalHT * (tva / 100)).toFixed(2)} ${devise} <br>
+                                                    Total TTC : ${totalTTC.toFixed(2)} ${devise}`;
+    }
+
+    document.getElementById('factureForm').onsubmit = function(event) {
+      event.preventDefault();
+      const form = event.target;
+      const data = {
+        type: form.type.value,
+        date: form.date.value,
+        client: form.client.value,
+        devise: form.devise.value,
+        tva: form.tva.value,
+        lignes: []
+      };
+      const rows = document.getElementById('lignesTable').getElementsByTagName('tbody')[0].rows;
+      for (let row of rows) {
+        const nom = row.cells[0].querySelector('input').value.trim();
+        const prix = parseFloat(row.cells[1].querySelector('input').value);
+        const qte = parseInt(row.cells[2].querySelector('input').value);
+        if (!nom || isNaN(prix) || isNaN(qte)) continue;
+        data.lignes.push({ nom, prix, qte });
+      }
+      const entrepriseInfo = JSON.parse(localStorage.getItem('entrepriseInfo'));
+      if (entrepriseInfo) data.entreprise = entrepriseInfo;
+      localStorage.setItem('factureData', JSON.stringify(data));
+      
+      // Afficher la notification de succès
+      afficherToast("Facture générée avec succès !");
+      document.getElementById('btnTelecharger').disabled = false;
+    };
+
+  
+    document.getElementById('btnTelecharger').onclick = function() {
+      const factureData = JSON.parse(localStorage.getItem('factureData'));
+      if (!factureData) return;
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      // Si un logo a été chargé, on l'ajoute en haut à gauche
+if (logoImageBase64) {
+  doc.addImage(logoImageBase64, 'PNG', 10, 10, 30, 30); // x, y, largeur, hauteur
+}
+
+
+      // Dynamic Title: Based on "Devis" or "Facture"
+      const title = factureData.type === "Facture" ? "FACTURE" : "DEVIS";
+      doc.setFontSize(30);  // Increased font size for the title
+      doc.setFont("helvetica", "bold");  // Bold title
+      doc.text(title, 105, 20, { align: "center" });
+
+      // Invoice Details
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      const lignesClient = factureData.client.split('\n').filter(l => l.trim() !== '');
+doc.setFont("helvetica", "bold");
+doc.setFontSize(14);
+doc.text("Informations client :", 14, 50);
+
+doc.setFont("helvetica", "normal");
+doc.setFontSize(11);
+
+// Affiche les lignes avec un espacement vertical propre
+let yPos = 60;
+const ligneHeight = 6;
+lignesClient.forEach(ligne => {
+  // Si trop bas sur la page, ajoute une nouvelle page
+  if (yPos > 270) {
+    doc.addPage();
+    yPos = 20;
+  }
+  doc.text(ligne, 20, yPos);
+  yPos += ligneHeight;
+});
+
+
+
+      
+      // Date placée en haut à droite, juste sous le titre
+const dateLabel = factureData.type === "Facture" ? "Date de la facture" : "Date de devis";
+doc.setFontSize(12);
+doc.setFont("helvetica", "normal");
+doc.text(
+  `${dateLabel} : ${factureData.date}`,
+  doc.internal.pageSize.width - 14,  // 14 mm de la marge droite
+  35,                                 // 30 mm du haut
+  { align: 'right' }
+);
+
+
+      // Table Header Styling (Soft Blue header with white text)
+      const headStyles = {
+        fillColor: [98, 145, 221],  // Soft blue color for the header
+        textColor: 255,             // White text color for the header
+        fontSize: 12,               // Set font size for header
+        fontStyle: 'bold',          // Bold header
+        halign: 'center',           // Center align text
+      };
+
+      // Table Body Styling (Light gray rows for alternating rows)
+      const bodyStyles = {
+        fillColor: [255, 255, 255],  // White color for rows
+        textColor: [0, 0, 0],        // Black text color for body
+        fontSize: 10,                // Set font size for body
+        halign: 'center',            // Center align text in body
+        valign: 'middle',            // Vertical align center
+      };
+
+      // Table Header
+      doc.autoTable({
+  startY: 105,
+  head: [['Description', `Prix Unitaire (${factureData.devise})`, 'Quantité', `Total (${factureData.devise})`]], // Changer l'ordre ici
+  body: factureData.lignes.map(ligne => [
+    ligne.nom,  // Description
+    `${ligne.prix.toFixed(2)} ${factureData.devise}`,  // Prix Unitaire
+    ligne.qte,  // Quantité
+    `${(ligne.prix * ligne.qte).toFixed(2)} ${factureData.devise}`  // Total
+  ]),
+  headStyles: headStyles,  // Applique les styles d'en-tête
+  bodyStyles: bodyStyles, // Applique les styles du corps
+  styles: { 
+    cellPadding: 4,   // Réduit l'espacement des cellules
+    lineColor: [200, 200, 200],  // Couleur des lignes de bordure (gris clair)
+    lineWidth: 0.1,   // Très fines bordures
+    fontSize: 10,
+    cellWidth: 'auto', // Largeur des cellules ajustée au contenu
+  },
+  theme: 'grid',  // Style "grid" pour la table
+  margin: { top: 10, bottom: 20 },  // Ajuste les marges
+  tableWidth: 'auto',   // Largeur de la table ajustée au contenu
+});
+
+
+      // Total Calculation: Bold totals section
+      const totalHT = factureData.lignes.reduce((acc, ligne) => acc + (ligne.prix * ligne.qte), 0);
+      const tva = totalHT * (factureData.tva / 100);
+      const totalTTC = totalHT + tva;
+      doc.setFont("helvetica", "bold");
+      doc.text(`Sous-total HT : ${totalHT.toFixed(2)} ${factureData.devise}`, 14, doc.lastAutoTable.finalY + 20);
+      doc.text(`TVA (${factureData.tva}%) : ${tva.toFixed(2)} ${factureData.devise}`, 14, doc.lastAutoTable.finalY + 30);
+      doc.text(`Total TTC : ${totalTTC.toFixed(2)} ${factureData.devise}`, 14, doc.lastAutoTable.finalY + 40);
+
+      // Footer: Display company information dynamically from client input (Not bold)
+      const entrepriseInfo = JSON.parse(localStorage.getItem('entrepriseInfo'));
+      if (entrepriseInfo) {
+        const entrepriseNom = entrepriseInfo.nom || "";
+        const entrepriseContact = entrepriseInfo.contact || "";
+        
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");  // Regular font for footer
+        if (entrepriseNom) {
+          doc.text(`${entrepriseNom} | ${entrepriseContact}`, 14, doc.internal.pageSize.height - 20);
+        }
+      }
+
+      // Save PDF
+doc.save(`${factureData.client}_facture.pdf`);
+    };
+
+
+    function afficherFormEntreprise() {
+      const form = document.getElementById('entrepriseInfoForm');
+      form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+    }
+
+    function enregistrerEntreprise() {
+      const entrepriseInfo = {
+        nom: document.getElementById('nomEntreprise').value
+      };
+      localStorage.setItem('entrepriseInfo', JSON.stringify(entrepriseInfo));
+      
+      // Affichage du message de confirmation
+      afficherToast("Information enregistrée avec succès !");
+    }
+
+    function reinitialiserFormulaire() {
+      document.getElementById('factureForm').reset();
+      localStorage.removeItem('factureData');
+      document.getElementById('btnTelecharger').disabled = true;
+      const tbody = document.getElementById('lignesTable').getElementsByTagName('tbody')[0];
+      tbody.innerHTML = '';
+      ajouterLigne();
+      mettreAJourTotaux();
+    }
+    mettreAJourTotaux();
+    
+  </script>
+</body>
+</html>
