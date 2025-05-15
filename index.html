@@ -2,7 +2,6 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
   <title>Création de Facture</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -19,9 +18,7 @@
       --button-padding: 15px;
     }
 
-    body {
-  touch-action: none;  /* Désactive le zoom tactile */
-}
+  
 /* Taille minimale de police pour éviter le zoom sur les champs de texte */
     input, select, textarea {
       font-size: 16px;
@@ -351,16 +348,6 @@ footer {
 
   <script>
 
-     // Script pour désactiver le zoom tactile
-    document.addEventListener('touchstart', function (e) {
-      if (e.touches.length > 1) {
-        e.preventDefault();  // Empêche le zoom
-      }
-    });
-
-    document.addEventListener('touchmove', function (e) {
-      e.preventDefault();  // Empêche le zoom
-    });
     // Fonction pour afficher la notification Toast
     function afficherToast(message) {
       const toast = document.getElementById('toastMessage');
