@@ -178,120 +178,85 @@ $box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 // Style du conteneur principal de login
-// Variables pour personnaliser rapidement les couleurs et les styles
-$primary-color: #007bff; // Couleur principale (bleu)
-$secondary-color: #6c757d; // Couleur secondaire (gris)
-$accent-color: #28a745; // Couleur d'accent (vert)
-$background-color: #f4f7fa; // Couleur de fond pour l'interface
-$white: #ffffff;
-$border-radius: 8px; // Bordure arrondie
-$padding: 20px; // Espacement interne
-$max-width: 400px; // Largeur maximale du formulaire
-$box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Ombre subtile
-
-// Style du conteneur principal de login
+/* Style du conteneur principal de login */
 .login-container {
-  background-color: $white; /* Fond blanc */
-  border-radius: $border-radius;
-  padding: $padding;
-  max-width: $max-width;
-  box-shadow: $box-shadow; /* Ombre légère pour un effet de flottement */
+  background-color: #fff;
+  border-radius: 8px; /* Bordures arrondies */
+  padding: 20px; /* Espacement interne */
+  max-width: 400px; /* Largeur maximale */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre douce */
   text-align: center;
-  margin: 50px auto; /* Centré sur la page */
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px); /* Légère animation au survol */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Ombre plus marquée */
-  }
+  margin: 50px auto; /* Centrer le conteneur */
 }
 
-// Titres
+/* Titre de l'interface */
 h2 {
-  font-size: 2.4rem;
-  color: $primary-color;
-  font-weight: 600;
-  margin-bottom: 30px;
-  text-transform: uppercase;
-  letter-spacing: 1px; /* Espacement des lettres pour un effet plus pro */
+  font-size: 2rem;
+  color: #2c3e50; /* Couleur de texte foncé */
+  margin-bottom: 20px;
 }
 
-// Formulaire
-form {
-  width: 100%; /* Le formulaire occupe toute la largeur du conteneur */
-
-  label {
-    font-weight: 600;
-    font-size: 1.2rem;
-    color: $secondary-color;
-    margin-bottom: 10px;
-    display: block;
-    text-align: left;
-  }
-
-  input,
-  button {
-    width: 100%;
-    padding: 14px; /* Espacement augmenté pour plus de confort */
-    margin: 12px 0; /* Marge améliorée */
-    border-radius: $border-radius;
-    font-size: 1rem;
-    box-sizing: border-box;
-    border: 1px solid #ddd; /* Bordure claire */
-    transition: all 0.3s ease;
-  }
-
-  input:focus {
-    outline: none;
-    border-color: $primary-color; /* Bordure colorée au focus */
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Ombre au focus */
-  }
-
-  input[type="password"] {
-    -webkit-text-security: disc; /* Cacher le mot de passe avec des points */
-  }
-
-  button {
-    background-color: $primary-color;
-    color: $white;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-
-    &:hover {
-      background-color: $accent-color;
-      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Ombre subtile au survol */
-    }
-
-    &:active {
-      background-color: darken($primary-color, 10%); /* Effet de couleur lors du clic */
-    }
-  }
-}
-
-// Pour les messages d'erreur ou succès (optionnel)
-.error-message,
-.success-message {
-  color: $primary-color;
+/* Styles pour les champs de saisie */
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 6px; /* Bordures arrondies */
+  border: 1px solid #ddd; /* Bordure légère */
   font-size: 1rem;
-  margin-top: 10px;
-  text-align: center;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
 }
 
-.error-message {
-  color: red;
+input:focus {
+  outline: none;
+  border: 2px solid #3498db; /* Bordure bleue au focus */
 }
 
-.success-message {
-  color: green;
+/* Style pour le label "Se souvenir de moi" */
+div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
 }
+
+label {
+  font-size: 0.9rem;
+  color: #7f8c8d; /* Couleur de texte plus claire */
+  margin-left: 8px;
+}
+
+/* Bouton de connexion */
+button {
+  width: 100%;
+  padding: 14px;
+  background-color: #3498db; /* Couleur de fond bleue */
+  color: #fff; /* Texte blanc */
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2980b9; /* Changement de couleur au survol */
+}
+
+button:active {
+  background-color: #1c5980; /* Couleur plus foncée au clic */
+}
+
+/* Style pour l'élément checkbox */
+input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+}
+
 
 
 // Styles pour la section "footer"
