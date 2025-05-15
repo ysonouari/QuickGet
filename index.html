@@ -185,10 +185,13 @@ $box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   padding: 20px; /* Espacement interne */
   max-width: 400px; /* Largeur maximale */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre douce */
-  text-align: center;
+  text-align: center; /* Centrer horizontalement le contenu */
   display: flex;
-  flex-direction: column;
-  margin: 50px auto; /* Centrer le conteneur */
+  flex-direction: column; /* Alignement en colonne */
+  justify-content: center; /* Centrer verticalement */
+  align-items: center; /* Centrer horizontalement */
+  margin: 50px auto; /* Centrer le conteneur sur la page */
+  height: 100vh; /* Hauteur pleine page pour un centrage parfait */
 }
 
 /* Titre de l'interface */
@@ -215,11 +218,11 @@ input:focus {
   border: 2px solid #3498db; /* Bordure bleue au focus */
 }
 
-/* Style pour le label "Se souvenir de moi" */
-div {
+/* Style pour la case "Se souvenir de moi" */
+.remember-me {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center; /* Centrer horizontalement */
   margin-bottom: 20px;
 }
 
